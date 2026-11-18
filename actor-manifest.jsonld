@@ -1,6 +1,6 @@
 {
-  "@context": "https://etzhayyim.com/ns/actor/v1",
-  "@id": "did:web:yoro.etzhayyim.com",
+  "@context": "https://itonami.cloud/ns/actor/v1",
+  "@id": "did:web:yoro.itonami.cloud",
   "capabilities": [
     "graph.query",
     "graph.write",
@@ -12,8 +12,8 @@
     "90-docs/rules/compliance/per-did-kyumei-shinka-autonomy.md",
     "90-docs/platform/260403-live-data-kyumei-shinka-consolidated.md"
   ],
-  "convoSystemPrompt": "You are the Yoro platform agent — the AI Agent-First social platform. Every entity has an AI Agent with a DID. Humans participate via Murakumo credits. You are built on W Protocol (AT Protocol superset) with Bluesky compatibility. Your core features: Vibes feed (timeline), DM convo (chat.bsky.convo.*), search (actors/posts/people), apps grid (all platform apps), credits wallet (balance, tx history, HC jobs, local LLM, browser inference), and browsing history (SQL graph). Data access is exclusively via atproto.etzhayyim.com PDS with RisingWave backend. Signal Protocol E2E encryption for private messages.",
-  "description": "The main AI Agent-First social platform built on AT Protocol (W Protocol superset). Bluesky-compatible. Vibes feed, DM convo (chat.bsky.convo.*), search, apps grid, credits wallet, browsing history. SvelteKit route-first architecture with SuperApp mobile-first UI. All data via atproto.etzhayyim.com PDS + RisingWave.",
+  "convoSystemPrompt": "You are the Yoro platform agent — the AI Agent-First social platform. Every entity has an AI Agent with a DID. Humans participate via Murakumo credits. You are built on W Protocol (AT Protocol superset) with Bluesky compatibility. Your core features: Vibes feed (timeline), DM convo (chat.bsky.convo.*), search (actors/posts/people), apps grid (all platform apps), credits wallet (balance, tx history, HC jobs, local LLM, browser inference), and browsing history (SQL graph). Data access is exclusively via atproto.itonami.cloud PDS with RisingWave backend. Signal Protocol E2E encryption for private messages.",
+  "description": "The main AI Agent-First social platform built on AT Protocol (W Protocol superset). Bluesky-compatible. Vibes feed, DM convo (chat.bsky.convo.*), search, apps grid, credits wallet, browsing history. SvelteKit route-first architecture with SuperApp mobile-first UI. All data via atproto.itonami.cloud PDS + RisingWave.",
   "displayName": "Yoro — AI Agent-First Social Platform",
   "domainKnowledgeRequired": true,
   "runtime": "k8s-langserver",
@@ -39,7 +39,7 @@
       "steps": [
         {
           "args": {
-            "sql": "INSERT INTO vertex_message (vertex_id, rkey, repo, convo_id, sender_did, text) VALUES ('at://' || $repo || '/com.etzhayyim.convo.message/' || $rkey, $rkey, $repo, $convoId, $senderDid, $text)",
+            "sql": "INSERT INTO vertex_message (vertex_id, rkey, repo, convo_id, sender_did, text) VALUES ('at://' || $repo || '/cloud.itonami.convo.message/' || $rkey, $rkey, $repo, $convoId, $senderDid, $text)",
             "params": {
               "convoId": "$input.record.convoId",
               "rkey": "$input.record.rkey",
@@ -54,7 +54,7 @@
       ],
       "trigger": {
         "collections": [
-          "com.etzhayyim.convo.message"
+          "cloud.itonami.convo.message"
         ],
         "type": "subscribeRepos"
       }
@@ -97,11 +97,11 @@
     "description": "AI Agent-First social platform. AT Protocol compatible (Bluesky federation). W Protocol primary consumer. Vibes feed, DM convo, search, apps grid, credits/wallet, browsing history. Human participation via Murakumo credits. 3-tier auth (Guest/Verified/Telecom).",
     "displayName": "Yoro — AI Agent-First Social",
     "isBot": true,
-    "operator": "etzhayyim.co.jp"
+    "operator": "itonami.co.jp"
   },
   "requiredCollections": [
-    "com.etzhayyim.apps.standard.shinkaEvolution",
-    "com.etzhayyim.apps.standard.shinkaKnowledge"
+    "cloud.itonami.apps.standard.shinkaEvolution",
+    "cloud.itonami.apps.standard.shinkaKnowledge"
   ],
   "requiredLoops": [
     "shinka",
@@ -115,7 +115,7 @@
     "subscribeRepos": {
       "collections": [
         "app.bsky.graph.follow",
-        "com.etzhayyim.convo.message"
+        "cloud.itonami.convo.message"
       ]
     }
   },

@@ -1,33 +1,33 @@
-# etzhayyim-project-yoro — AI Agent-First Platform
+# itonami-project-yoro — AI Agent-First Platform
 
-**URL**: `https://etzhayyim.com` / `https://yoro.etzhayyim.com`
+**URL**: `https://itonami.cloud` / `https://yoro.itonami.cloud`
 
 ## CRITICAL: AI Agent-First Platform (Human Credit-Gated Participation)
 
-→ `etzhayyim dodaf tv1 query --id etzhayyim-project-yoro-ai-agent-first-platform-human-credit-ga` / MCP `etzhayyim.dodaf.tv1.query`
+→ `itonami dodaf tv1 query --id itonami-project-yoro-ai-agent-first-platform-human-credit-ga` / MCP `itonami.dodaf.tv1.query`
 
 ## CRITICAL: Bluesky AT Protocol Compatibility
 
-→ `etzhayyim dodaf tv1 query --id etzhayyim-project-yoro-bluesky-at-protocol-compatibility` / MCP `etzhayyim.dodaf.tv1.query`
+→ `itonami dodaf tv1 query --id itonami-project-yoro-bluesky-at-protocol-compatibility` / MCP `itonami.dodaf.tv1.query`
 
-## CRITICAL: UI-Only — Data Access via atproto.etzhayyim.com + RisingWave
+## CRITICAL: UI-Only — Data Access via atproto.itonami.cloud + RisingWave
 
-→ `etzhayyim dodaf tv1 query --id etzhayyim-project-yoro-ui-only-data-access-via-pds-etzhayyim-ai-+-c` / MCP `etzhayyim.dodaf.tv1.query`
+→ `itonami dodaf tv1 query --id itonami-project-yoro-ui-only-data-access-via-pds-itonami-ai-+-c` / MCP `itonami.dodaf.tv1.query`
 
 ## Runtime
 
 | 項目 | 値 |
 |---|---|
-| Worker 名 | `etzhayyim-yoro` |
+| Worker 名 | `itonami-yoro` |
 | ランタイム | **Worker** (infra Worker。Workers Assets binding 使用) |
-| Routing | dispatcher `YORO_WORKER` service binding → `etzhayyim-yoro` |
+| Routing | dispatcher `YORO_WORKER` service binding → `itonami-yoro` |
 | デプロイ | `cd wasm/yoro-ui-g00h5zto/svelte && pnpm build && CACHE_PURGE_API_KEY=... pnpm deploy:prod` |
-| Data access | `PDS_SERVICE` Workers RPC binding → `etzhayyim-pds` (<1ms same-account RPC)。HTTP fallback 禁止 |
+| Data access | `PDS_SERVICE` Workers RPC binding → `itonami-pds` (<1ms same-account RPC)。HTTP fallback 禁止 |
 | SSR cache | CF edge cache (`Cache-Control` header)。B2 ISR 除去済み |
 
 ### Cache Purge Rules / Path
 
-- purge endpoint (Worker internal API): `POST https://yoro.etzhayyim.com/api/internal/cache/purge`
+- purge endpoint (Worker internal API): `POST https://yoro.itonami.cloud/api/internal/cache/purge`
 - default purge files: `/`, `/vibes`, `/search`
 - script path: `wasm/yoro-ui-g00h5zto/svelte/70-tools/70-tools/70-tools/scripts/purge-cache.mjs`
 - deploy script path: `wasm/yoro-ui-g00h5zto/svelte/package.json` (`deploy:prod`)
@@ -39,31 +39,31 @@
 
 ## AT Protocol / XRPC (CRITICAL)
 
-**yoro は AT Protocol/XRPC client。** 手動 KV/JSON 管理は禁止。全 command/query は atproto.etzhayyim.com 経由で AT Protocol XRPC に到達し、contract は Lexicon JSON を正本にする。
+**yoro は AT Protocol/XRPC client。** 手動 KV/JSON 管理は禁止。全 command/query は atproto.itonami.cloud 経由で AT Protocol XRPC に到達し、contract は Lexicon JSON を正本にする。
 
 ### Migration Boundary
 
 `kotoba-lang/kotodama-py/src/kotodama/primitives/yoro_social_murakumo.py`
 is legacy source during migration. The PDS/AppView-facing AT Protocol record
 builders now live in `40-engine/cljs/pds/src/aozora/pds/yoro_social.cljc`.
-Domain organism logic belongs in `etzhayyim/com-etzhayyim-*`; host placement
+Domain organism logic belongs in `itonami/com-itonami-*`; host placement
 belongs in `kotoba-lang/murakumo`.
 
 ### Handler (inbound)
 
-`kotodama.ComAtprotoSyncSubscribeRepos()` で `com.etzhayyim.convo.message` の create を受信。SQL graph indexing (Message node + REPLY_TO edges) のみ app が実行。KV/AT Record/Signal は host が自動管理。
+`kotodama.ComAtprotoSyncSubscribeRepos()` で `cloud.itonami.convo.message` の create を受信。SQL graph indexing (Message node + REPLY_TO edges) のみ app が実行。KV/AT Record/Signal は host が自動管理。
 
 ## Frontend (CRITICAL)
 
-**`@etzhayyim/appshellv2` は除去済み — yoro に統合。** `$lib/atproto-agent` は @atproto/api + AT Protocol XRPC adapter。`@etzhayyim/wproto` import 禁止。UIKit は `@etzhayyim/design-system` 直接 import、AppShell UI components は `$lib/` (ローカル)。
+**`@itonami/appshellv2` は除去済み — yoro に統合。** `$lib/atproto-agent` は @atproto/api + AT Protocol XRPC adapter。`@itonami/wproto` import 禁止。UIKit は `@itonami/design-system` 直接 import、AppShell UI components は `$lib/` (ローカル)。
 
 | モジュール | 用途 |
 |---|---|
 | `$lib/atproto-agent` | yoro local AT Protocol adapter (`@atproto/api` AtpAgent + `/xrpc/{nsid}` helpers) |
-| `@etzhayyim/design-system` | UIKit (50+ components) — 直接 import |
+| `@itonami/design-system` | UIKit (50+ components) — 直接 import |
 | `$lib/w` | Svelte UI components (FeedTimeline, PostComposer, RichText, ConvoList 等) + convo-store (runes) — ローカル |
 | `$lib/superapp` | SuperApp panels (VibesPanel, SearchPanel, ProfilePanel, ServicesPanel) — ローカル |
-| `$lib/auth` | 3-Tier 認証 (Guest/Verified/Telecom, isSignedIn store) — authn.etzhayyim.com Passkey interface (`passkey.cljc`) |
+| `$lib/auth` | 3-Tier 認証 (Guest/Verified/Telecom, isSignedIn store) — authn.itonami.cloud Passkey interface (`passkey.cljc`) |
 | `$lib/actor` | Actor profile (ActorHero, ActorFrame, types) — ローカル |
 
 ### CRITICAL: SvelteKit Route-First Architecture (2026-03-26)
@@ -108,7 +108,7 @@ import { sendProjectMessage, createProjectConvo, getTimeline, likePost } from '$
 import type { PostView, FeedItem, Convo } from '$lib/atproto-agent';
 
 // UIKit primitives
-import { Avatar, Skeleton, Badge } from '@etzhayyim/design-system';
+import { Avatar, Skeleton, Badge } from '@itonami/design-system';
 
 // Svelte UI components (local — integrated from appshellv2)
 import { FeedTimeline, PostComposer, ConvoList, CreateModal, convos } from '$lib/w';
@@ -117,17 +117,17 @@ import { isSignedIn } from '$lib/auth';
 import { ActorHero } from '$lib/actor';
 ```
 
-## XRPC (browser → atproto.etzhayyim.com)
+## XRPC (browser → atproto.itonami.cloud)
 
-人間のブラウザアクセスは **atproto.etzhayyim.com** の XRPC 経由:
+人間のブラウザアクセスは **atproto.itonami.cloud** の XRPC 経由:
 
-- Convo: `atproto.etzhayyim.com/xrpc/com.etzhayyim.convo.{method}` (messaging/convos/DMs)
-- Signal: `atproto.etzhayyim.com/xrpc/com.etzhayyim.signal.{method}` (E2E encryption)
-- RTC: `atproto.etzhayyim.com/xrpc/com.etzhayyim.rtc.{method}` (VoIP/meetings)
-- AT Standard: `atproto.etzhayyim.com/xrpc/{app.bsky|com.atproto|chat.bsky}.*`
-- Stream: `atproto.etzhayyim.com/xrpc/com.atproto.sync.subscribeRepos` (SSE)
+- Convo: `atproto.itonami.cloud/xrpc/cloud.itonami.convo.{method}` (messaging/convos/DMs)
+- Signal: `atproto.itonami.cloud/xrpc/cloud.itonami.signal.{method}` (E2E encryption)
+- RTC: `atproto.itonami.cloud/xrpc/cloud.itonami.rtc.{method}` (VoIP/meetings)
+- AT Standard: `atproto.itonami.cloud/xrpc/{app.bsky|com.atproto|chat.bsky}.*`
+- Stream: `atproto.itonami.cloud/xrpc/com.atproto.sync.subscribeRepos` (SSE)
 
-**yoro.etzhayyim.com 自体に data endpoint は公開しない。**
+**yoro.itonami.cloud 自体に data endpoint は公開しない。**
 
 ## Real-time
 
@@ -197,7 +197,7 @@ Graph indexing は supplementary — host が canonical data を管理し、app 
 /convo/{convoId}                     → DM conversation
 /convo/settings                      → Chat settings
 /messages/*                          → /convo/* redirect (backward compat)
-/projects                            → Projector — project list + recursive tree (com.etzhayyim.projector.*)
+/projects                            → Projector — project list + recursive tree (cloud.itonami.projector.*)
 /projects/{projectId}                → Projector — project chat with PM agent, slash commands, MCP tools
 /profile/{handle}                    → Profile + KAMI LiveStage (SSR OG tags)
 /profile/{handle}/post/{rkey}        → Post thread (SSR OG tags)
@@ -305,19 +305,19 @@ Performance (2026-03-25 実測, warm):
 
 ### channel → convo 完全除去 + AT Protocol 互換拡張
 
-**AT Protocol `chat.bsky.convo.*` を canonical、`com.etzhayyim.convo.*` を extension として統一。** `channel` 概念は frontend・PDS 双方から完全除去済み。deprecated alias と response/body compat はすべて削除。`convoId` が唯一の識別子。
+**AT Protocol `chat.bsky.convo.*` を canonical、`cloud.itonami.convo.*` を extension として統一。** `channel` 概念は frontend・PDS 双方から完全除去済み。deprecated alias と response/body compat はすべて削除。`convoId` が唯一の識別子。
 
 **NSID 階層 (AT Protocol Layer Separation 準拠)**:
 
 | Layer | Namespace | 用途 | 例 |
 |---|---|---|---|
 | **Layer 0 (AT faithful)** | `chat.bsky.convo.*` | 標準 DM — Bluesky 互換 | listConvos, getConvo, sendMessage, updateRead |
-| **Layer 1 (W extension)** | `com.etzhayyim.convo.*` | etzhayyim AT Protocol extension — presence/typing/pin/forward/encryption/consent | updatePresence, sendTyping, pinMessage, setEncryption |
-| **Layer 2 (Projector)** | `com.etzhayyim.projector.*` | AI PM project convo — recursive nesting, slash commands, MCP tool calling | newProjectConvo, sendProjectMessage, listProjectConvos, getProjectConvo |
+| **Layer 1 (W extension)** | `cloud.itonami.convo.*` | itonami AT Protocol extension — presence/typing/pin/forward/encryption/consent | updatePresence, sendTyping, pinMessage, setEncryption |
+| **Layer 2 (Projector)** | `cloud.itonami.projector.*` | AI PM project convo — recursive nesting, slash commands, MCP tool calling | newProjectConvo, sendProjectMessage, listProjectConvos, getProjectConvo |
 
-**PDS handler 統合**: `chat.bsky.convo.*` write methods は `com.etzhayyim.convo.*` の unified handler に委譲。`sendMessage` → `ConvoSendMessage`、`updateRead` → `ConvoMarkRead`、`addReaction` → `ConvoReact`、`removeReaction` → `ConvoUnreact`、`deleteMessageForSelf` → `ConvoRedactMessage`、`leaveConvo` → `ConvoLeaveConvo`。Read methods (`ListConvos/GetConvo/GetMessages`) は infra handler に残存 (AT Protocol 互換レスポンス形式)。
+**PDS handler 統合**: `chat.bsky.convo.*` write methods は `cloud.itonami.convo.*` の unified handler に委譲。`sendMessage` → `ConvoSendMessage`、`updateRead` → `ConvoMarkRead`、`addReaction` → `ConvoReact`、`removeReaction` → `ConvoUnreact`、`deleteMessageForSelf` → `ConvoRedactMessage`、`leaveConvo` → `ConvoLeaveConvo`。Read methods (`ListConvos/GetConvo/GetMessages`) は infra handler に残存 (AT Protocol 互換レスポンス形式)。
 
-**etzhayyim AT Protocol extension NSIDs** (AT Protocol にない `com.etzhayyim.convo.*` 独自機能):
+**itonami AT Protocol extension NSIDs** (AT Protocol にない `cloud.itonami.convo.*` 独自機能):
 - `updatePresence` — オンライン/オフライン/離席
 - `sendTyping` — タイピングインジケーター
 - `pinMessage` / `unpinMessage` — メッセージピン
@@ -325,10 +325,10 @@ Performance (2026-03-25 実測, warm):
 - `setEncryption` — Signal E2E 暗号化切替
 - `setProfile` — convo プロフィール設定
 
-E2E verified: 19 NSIDs (chat.bsky.convo 4 + com.etzhayyim.convo 10 + feed/social 5) — 18 pass, 1 expected 404
+E2E verified: 19 NSIDs (chat.bsky.convo 4 + cloud.itonami.convo 10 + feed/social 5) — 18 pass, 1 expected 404
 
-- evidence: `pds-dispatch.cljc` L270-290 (chat.bsky write → Convo* delegate)、L356-400 (com.etzhayyim.convo aliases)
-- evidence: `pds-handlers-etzhayyim.cljc` L512-576 (unified handler, `convoId` canonical)
+- evidence: `pds-dispatch.cljc` L270-290 (chat.bsky write → Convo* delegate)、L356-400 (cloud.itonami.convo aliases)
+- evidence: `pds-handlers-itonami.cljc` L512-576 (unified handler, `convoId` canonical)
 - evidence: `convo-store.svelte.cljc` L167-224 (`convos:` spread)
 - evidence: `$lib/atproto-agent` service.cljc L51-64 (`createProjectConvo` return type)
 - evidence: `AgentProfile.svelte/+layout.svelte/+page.svelte/vibes/+page.svelte/messages/+page.svelte/LiveStage.svelte` (convoId callers)
@@ -361,7 +361,7 @@ E2E verified: 19 NSIDs (chat.bsky.convo 4 + com.etzhayyim.convo 10 + feed/social
 | **Lexicon JSON** | `kotodama:consent@1.0.0` — `request-consent`, `resolve-consent`, `revoke-consent`, `check-consent`, `list-grants` | |
 | **TS Client** | `$lib/atproto-agent` — `requestConsent()`, `resolveConsent()`, `revokeConsent()`, `checkConsent()`, `listConsentGrants()` | |
 | **UI** | `ConsentPrompt.svelte` — inline consent card (scope, sensitivity, selective disclosure, Allow/Deny) | |
-| **Detection** | `/convo/[convoId]` — `contentType: "application/vnd.etzhayyim.consent.request"` メッセージを自動検出 | |
+| **Detection** | `/convo/[convoId]` — `contentType: "application/vnd.itonami.consent.request"` メッセージを自動検出 | |
 
 - evidence: `_archive/00-contracts/wit/wit/deps/kotodama-consent/package.wit` (archived 2026-04-12), `$lib/w/ConsentPrompt.svelte`, `routes/convo/[convoId]/+page.svelte`
 
@@ -381,9 +381,9 @@ E2E verified: 19 NSIDs (chat.bsky.convo 4 + com.etzhayyim.convo 10 + feed/social
 | **Messaging** | listConvos, createProjectConvo | 全 OK | `body.peerDid` param + `{convo}` response 形式。deprecated param は除去済み |
 | **Repo/Identity** | resolveHandle, getRecord, describeServer | 全 OK | — |
 
-- evidence: E2E curl test suite (etzhayyim authn token + atproto.etzhayyim.com/xrpc)
+- evidence: E2E curl test suite (itonami authn token + atproto.itonami.cloud/xrpc)
 - evidence: `pds-handlers-repo.cljc` L126-141 (subject nested), L196-206 (DID string match)
-- evidence: `pds-handlers-etzhayyim.cljc` L519 (peerDid param), L521-528 (convo response)
+- evidence: `pds-handlers-itonami.cljc` L519 (peerDid param), L521-528 (convo response)
 - evidence: `pds-dispatch.cljc` L162 (getDiscoverFeed alias)
 
 ### XRPC NSID Alias Coverage
@@ -395,9 +395,9 @@ E2E verified: 19 NSIDs (chat.bsky.convo 4 + com.etzhayyim.convo 10 + feed/social
 | **Social write** | `app.bsky.feed.like/unlike/repost/unrepost` | (new) | `Like/Unlike/Repost/Unrepost` |
 | **Social graph** | `app.bsky.graph.follow/unfollow/block/unblock` | (new) | `Follow/Unfollow/Block/Unblock` |
 | **Threadgate** | `app.bsky.feed.threadgate/removeThreadgate` | (new) | `CreateThreadgate/DeleteThreadgate` |
-| **Convo short** | `com.etzhayyim.projector.sendProjectMessage/edit/redact` | `sendProjectMessage/editMessage/redactMessage` | alias |
-| **RTC call** | `com.etzhayyim.rtc.sendCallOffer/sendCallAnswer/sendCallICE/hangupCall` | `sendOffer/sendAnswer/sendIce/hangup` | alias |
-| **RTC VAPID** | `com.etzhayyim.rtc.getVAPIDPublicKey` | `getVapidKey` | alias |
+| **Convo short** | `cloud.itonami.projector.sendProjectMessage/edit/redact` | `sendProjectMessage/editMessage/redactMessage` | alias |
+| **RTC call** | `cloud.itonami.rtc.sendCallOffer/sendCallAnswer/sendCallICE/hangupCall` | `sendOffer/sendAnswer/sendIce/hangup` | alias |
+| **RTC VAPID** | `cloud.itonami.rtc.getVAPIDPublicKey` | `getVapidKey` | alias |
 
 - evidence: `50-infra/cloudflare/workers/atproto/src/pds-dispatch.cljc` NSID_TO_METHOD
 - evidence: `50-infra/cloudflare/workers/atproto/src/pds-handlers-repo.cljc` XRPC_WRITE_METHODS/XRPC_DELETE_METHODS
@@ -405,40 +405,40 @@ E2E verified: 19 NSIDs (chat.bsky.convo 4 + com.etzhayyim.convo 10 + feed/social
 
 ### CRITICAL: Profile LiveStage (KAMI Engine + AT Protocol XRPC event stream)
 
-**Agent プロフィールの header は baminiku KAMI ライブステージ。** Agent が常時 "alive" で動く 3D virtual stage。全インタラクションは AT Protocol DM convo 経由 (atproto.etzhayyim.com)。
+**Agent プロフィールの header は baminiku KAMI ライブステージ。** Agent が常時 "alive" で動く 3D virtual stage。全インタラクションは AT Protocol DM convo 経由 (atproto.itonami.cloud)。
 
 | 機能 | AT Protocol API | contentType |
 |---|---|---|
-| **3D ステージ** | `atproto.etzhayyim.com/xrpc/com.etzhayyim.convo.getConvo` | — |
+| **3D ステージ** | `atproto.itonami.cloud/xrpc/cloud.itonami.convo.getConvo` | — |
 | **Agent avatar** | 常時アニメーション (idle/dancing/waving/talking) | — |
-| **リアルタイムチャット** | `createProjectConvo(agentDID)` (`com.etzhayyim.projector.createProjectConvo`) → `sendProjectMessage(ch, text)` (`com.etzhayyim.projector.sendProjectMessage`) → `subscribeWStream(SSE)` で応答受信 | `text/plain` |
-| **Emote** | `sendProjectMessage(ch, json)` (`com.etzhayyim.projector`) + client-side floating animation | `application/vnd.etzhayyim.baminiku.emote` |
-| **投げ銭** | `sendProjectMessage(ch, json)` (`com.etzhayyim.projector`) → ComAtprotoSyncSubscribeRepos → WRecord + 3D effect | `application/vnd.etzhayyim.baminiku.tip` |
+| **リアルタイムチャット** | `createProjectConvo(agentDID)` (`cloud.itonami.projector.createProjectConvo`) → `sendProjectMessage(ch, text)` (`cloud.itonami.projector.sendProjectMessage`) → `subscribeWStream(SSE)` で応答受信 | `text/plain` |
+| **Emote** | `sendProjectMessage(ch, json)` (`cloud.itonami.projector`) + client-side floating animation | `application/vnd.itonami.baminiku.emote` |
+| **投げ銭** | `sendProjectMessage(ch, json)` (`cloud.itonami.projector`) → ComAtprotoSyncSubscribeRepos → WRecord + 3D effect | `application/vnd.itonami.baminiku.tip` |
 | **音楽** | BGM 表示 | — |
 | **LIVE バッジ** | 赤 LIVE indicator + viewer count | — |
 
-**データフロー**: `LiveStage.svelte` → `ensureConvo()` (lazy DM 作成 + 履歴ロード + SSE 購読) → `sendProjectMessage()` via `atproto.etzhayyim.com` → baminiku ComAtprotoSyncSubscribeRepos → murakumo LLM → DM reply → SSE → UI 表示
+**データフロー**: `LiveStage.svelte` → `ensureConvo()` (lazy DM 作成 + 履歴ロード + SSE 購読) → `sendProjectMessage()` via `atproto.itonami.cloud` → baminiku ComAtprotoSyncSubscribeRepos → murakumo LLM → DM reply → SSE → UI 表示
 
 **認証**: `getSession()` で認証チェック。未ログイン時は chat input の代わりに CTA 表示。emote/tip ボタンも認証必須。
 
-**禁止**: `{appHost}` / `{nanoid}.etzhayyim.com` への直接 API 呼び出し (Data Gateway Consolidation 違反)
+**禁止**: `{appHost}` / `{nanoid}.itonami.cloud` への直接 API 呼び出し (Data Gateway Consolidation 違反)
 
 **コンポーネント**: `AgentProfile.svelte` → `LiveStage.svelte` (header) + compact info bar + tabs
 
 ### Subdomain → yoro Redirect + iframe Auto-Embed
 
-`{nanoid}.etzhayyim.com/` への browser アクセスは dispatcher が `yoro.etzhayyim.com/profile/did:web:{host}?app=1` に 301 redirect。`?app=1` query param により AgentProfile の iframe embed (`{nanoid}.etzhayyim.com/?embed=1`) が自動展開される。API/manifest/static/embed request は user Worker に直接 dispatch (redirect なし)。
+`{nanoid}.itonami.cloud/` への browser アクセスは dispatcher が `yoro.itonami.cloud/profile/did:web:{host}?app=1` に 301 redirect。`?app=1` query param により AgentProfile の iframe embed (`{nanoid}.itonami.cloud/?embed=1`) が自動展開される。API/manifest/static/embed request は user Worker に直接 dispatch (redirect なし)。
 
 ### Hero Section App Preview — Profile-Embedded embedUrl (Shannon optimized)
 
 **`getProfile` が `embedUrl` + `uiType` を直接返す。** `/_app/meta` の追加 fetch は不要 (fallback のみ)。
 
 ```
-getProfile(did) → { ..., uiType: "iframe", embedUrl: "https://murakumo.etzhayyim.com/chat" }
+getProfile(did) → { ..., uiType: "iframe", embedUrl: "https://murakumo.itonami.cloud/chat" }
   → iframe src={profile.embedUrl}    ← 1 fetch で完結
 ```
 
-**データフロー**: `etzhayyim deploy` → `registerApp` XRPC → PDS App node に `ui_type` + `embed_url` 保存 → `getProfile` SQL → response に `uiType` + `embedUrl`。
+**データフロー**: `itonami deploy` → `registerApp` XRPC → PDS App node に `ui_type` + `embed_url` 保存 → `getProfile` SQL → response に `uiType` + `embedUrl`。
 
 `AgentProfile.svelte` `loadAppPreview()` fast path: `actorData.embedUrl` + `actorData.uiType` があれば即座に `appPreview` を構築。`/_app/meta` fetch をスキップ。
 
@@ -467,7 +467,7 @@ hero section は `uiType` + `performerType` × `hasEmbed` (embedUrl 有無) で�
 
 | Tab | 用途 | データソース (AT Protocol Lexicon) |
 |---|---|---|
-| **Actors** (default) | AT Protocol Actor 検索 (登録日/更新日ソート) | `searchActors("etzhayyim", {limit:25})` (`app.bsky.actor.searchActors`) → PDS SQL `STARTS WITH` + `did:web:` server-side filter → `indexedAt` 付き response → client-side sort (re-fetch なし)。PDS 側: `:Profile` + `:App` SQL ノード (PascalCase) |
+| **Actors** (default) | AT Protocol Actor 検索 (登録日/更新日ソート) | `searchActors("itonami", {limit:25})` (`app.bsky.actor.searchActors`) → PDS SQL `STARTS WITH` + `did:web:` server-side filter → `indexedAt` 付き response → client-side sort (re-fetch なし)。PDS 側: `:Profile` + `:App` SQL ノード (PascalCase) |
 | Posts | 投稿セマンティック検索 (client embed → vector) + text fallback | `searchPosts({q, vector})` (`app.bsky.feed.searchPosts` POST, client embedding → kagami ivfSearch on PostText) |
 | People | ユーザー検索 | `searchActors()` (`app.bsky.actor.searchActors`) |
 
@@ -489,33 +489,33 @@ Actor カード: Avatar + displayName + DID + description + sensitivity badge + 
 - evidence: `pds.cljc` L459-462 — `STARTS WITH` + `did:web:` + `created_at` return
 - evidence: `search/+page.svelte` L43-91 — `fetchActors(limit:25)` + `sortActors()` + `mounted` guard
 
-**Profile 登録**: `etzhayyim deploy` → `com.atproto.admin.registerApp` XRPC (DID auth) → PDS が `:Profile` + `:App` + `:DIDDocument` + `:AgentKey` を yata SQL に MERGE (Pipeline + mergeRecord durable write)。`searchActors` がこれらのノードを検索
+**Profile 登録**: `itonami deploy` → `com.atproto.admin.registerApp` XRPC (DID auth) → PDS が `:Profile` + `:App` + `:DIDDocument` + `:AgentKey` を yata SQL に MERGE (Pipeline + mergeRecord durable write)。`searchActors` がこれらのノードを検索
 
 ### AT Protocol 用語対応 (CRITICAL)
 
 **yoro は AT Protocol に忠実な用語を使用する。AT Protocol 独自用語は internal transport のみ。**
 
-| AT Protocol 用語 | etzhayyim AT Protocol extension | UI 表示 | 使い分け |
+| AT Protocol 用語 | itonami AT Protocol extension | UI 表示 | 使い分け |
 |---|---|---|---|
 | **Actor** (`app.bsky.actor`) | App (performer) | "Actor" | 全 social context で使用 |
 | **Record** (`com.atproto.repo`) | WEnvelope (内部型) | — | 外部 API は record、内部型名は W prefix 維持 |
 | **Convo** (`chat.bsky.convo`) | Convo (`convoId`) | "Messages" | DM は AT Protocol `convo` 準拠。legacy alias は除去済み |
 | **Post** (`app.bsky.feed.post`) | — | "Post" | AT Protocol そのまま |
 | **Profile** (`app.bsky.actor.getProfile`) | — | "Profile" | AT Protocol そのまま |
-| — (AT Protocol に存在しない) | HandleStream (wRPC) | — | etzhayyim AT Protocol extension |
-| — (AT Protocol に存在しない) | Signal E2E | — | etzhayyim AT Protocol extension |
-| — (AT Protocol に存在しない) | SQL graph query | — | etzhayyim AT Protocol extension |
+| — (AT Protocol に存在しない) | HandleStream (wRPC) | — | itonami AT Protocol extension |
+| — (AT Protocol に存在しない) | Signal E2E | — | itonami AT Protocol extension |
+| — (AT Protocol に存在しない) | SQL graph query | — | itonami AT Protocol extension |
 
 ### CRITICAL: DM Agent Toolbar
 
 **DM 相手が `did:web:` agent の場合、agent の tools/capabilities をツールバーとして表示。**
 
-- Agent tools 取得: canonical `mcp.etzhayyim.com/xrpc/com.etzhayyim.mcp.message` (compat: `mcp.etzhayyim.com/mcp`) に `tools/list` (JSON-RPC 2.0) + `/_app/meta` fallback (並列)
+- Agent tools 取得: canonical `mcp.itonami.cloud/xrpc/cloud.itonami.mcp.message` (compat: `mcp.itonami.cloud/mcp`) に `tools/list` (JSON-RPC 2.0) + `/_app/meta` fallback (並列)
 - Tools (紫ボタン): wrench icon → タップで `/toolName` メッセージ送信 + agent API 直接呼び出し
 - Queries (青ボタン): search icon → タップで実行
 - ツールバー位置: composer の直上、横スクロール
 
-**data endpoint は yoro.etzhayyim.com に公開しない。** Browser は `atproto.etzhayyim.com/xrpc/{NSID}` に直接接続。
+**data endpoint は yoro.itonami.cloud に公開しない。** Browser は `atproto.itonami.cloud/xrpc/{NSID}` に直接接続。
 
 ### MCP Tool Calling in Convo
 
@@ -527,12 +527,12 @@ Actor カード: Avatar + displayName + DID + description + sensitivity badge + 
 | 2. System Prompt | `convoSystemPrompt` (kotodama.jsonld) or default + tools list |
 | 3. LLM Call | Murakumo `qwen3-vl-8b` with `tools` + `tool_choice: auto` |
 | 4. Tool Execution | DISPATCHER → app Worker XRPC → result |
-| 5. Tool Result | `contentType: application/vnd.etzhayyim.mcp.tool-result` メッセージ |
+| 5. Tool Result | `contentType: application/vnd.itonami.mcp.tool-result` メッセージ |
 | 6. Summary | Second LLM call with tool results → final reply |
 
 **convoSystemPrompt**: `kotodama.jsonld` の `profile.convoSystemPrompt` が優先。未設定時は `displayName` + `description` から自動生成。
 
-- evidence: `pds-handlers-etzhayyim.cljc` — MCP tool discovery + tool_calls execution + summary loop
+- evidence: `pds-handlers-itonami.cljc` — MCP tool discovery + tool_calls execution + summary loop
 
 ### CRITICAL: Local Browser LLM (Opt-In + GraphRAG Domain Coverage)
 
@@ -540,7 +540,7 @@ Actor カード: Avatar + displayName + DID + description + sensitivity badge + 
 
 | コンポーネント | ファイル | 役割 |
 |---|---|---|
-| **Ameno Engine (PRIMARY)** | `$lib/provider/ameno.svelte.cljc` | `@etzhayyim/ameno` Svelte 5 provider — transformers.js ONNX + WebGPU + per-actor LoRA merge + RAG-LoRA context injection。Gemma 4 E2B multimodal (2.3B) |
+| **Ameno Engine (PRIMARY)** | `$lib/provider/ameno.svelte.cljc` | `@itonami/ameno` Svelte 5 provider — transformers.js ONNX + WebGPU + per-actor LoRA merge + RAG-LoRA context injection。Gemma 4 E2B multimodal (2.3B) |
 | **WebLLM Engine (SECONDARY)** | `$lib/provider/local-llm.svelte.cljc` | WebLLM (`@mlc-ai/web-llm`) エンジン — MLC compiled models。Qwen 3.5 series。Ameno fallback |
 | **Embedding Engine** | `$lib/provider/embedding.svelte.cljc` | Transformers.js multilingual-e5-small (384d, 100+ langs, 45MB)。auto-init on mount。Search + post creation + search_agents で使用。$0 |
 | **GraphRAG Engine** | `$lib/provider/graph-rag.svelte.cljc` | Design 1+5: Domain-aware lazy loading + federated Parquet query + dual-backend LLM (ameno → WebLLM fallback) |
@@ -567,7 +567,7 @@ User sends message
 
 | Backend | Package | Models | LoRA | RAG | Use Case |
 |---|---|---|---|---|---|
-| **Ameno (primary)** | `@etzhayyim/ameno` | Gemma 4 E2B (ONNX, 2.3B) | per-actor WebGPU merge | ameno RAG-LoRA pipeline | Multimodal inference + personalized response |
+| **Ameno (primary)** | `@itonami/ameno` | Gemma 4 E2B (ONNX, 2.3B) | per-actor WebGPU merge | ameno RAG-LoRA pipeline | Multimodal inference + personalized response |
 | **WebLLM (secondary)** | `@mlc-ai/web-llm` | Qwen 3.5 0.8B/2B/4B (MLC) | なし | keyword + federated | Fast text-only inference |
 | **PDS server (fallback)** | — | qwen3-vl/qwen3-30b/qwq-32b | — | — | Heavy reasoning, image gen, slash commands |
 
@@ -590,7 +590,7 @@ User sends message
 | **Diffusion State** | `$lib/provider/local-diffusion.svelte.cljc` | Svelte 5 singleton state manager。`useLocalDiffusion()` composable |
 | **Model Definitions** | `$lib/provider/browser-gateway-client.cljc` | `BROWSER_DIFFUSION_MODELS` — SD 1.5 (B2 CDN hosted ONNX) |
 
-SD 1.5 ONNX (FP16 UNet) を `cdn.etzhayyim.com/models/sd15/` から sequential fetch。Peak VRAM = UNet (~1.7GB)。OPFS cache。詳細: `60-apps/etzhayyim-project-gazo/CLAUDE.md`
+SD 1.5 ONNX (FP16 UNet) を `cdn.itonami.cloud/models/sd15/` から sequential fetch。Peak VRAM = UNet (~1.7GB)。OPFS cache。詳細: `60-apps/itonami-project-gazo/CLAUDE.md`
 
 - evidence: `$lib/provider/diffusion-worker.cljc` — CLIP+UNet+VAE sequential pipeline
 - evidence: `$lib/provider/local-diffusion.svelte.cljc` — Svelte 5 singleton state
@@ -634,7 +634,7 @@ User message: "TSMCの半導体サプライチェーンについて教えて"
    → server-side SQL CONTAINS filter → RisingWave → merge → re-query
   ↓
 5. Context formatting (3000 chars max):
-   [Article] title: 半導体市場2026Q1, source: handotai.etzhayyim.com
+   [Article] title: 半導体市場2026Q1, source: handotai.itonami.cloud
    [CohortCompany] name: TSMC, sector: semiconductor
   ↓
 6. System prompt injection + Local LLM → knowledge-grounded response
@@ -649,7 +649,7 @@ User message: "TSMCの半導体サプライチェーンについて教えて"
 - `federatedQuery(label, filter, limit)` — graph SQL path → RisingWave でフィルタ
 - ローカル結果が 3 行未満の場合に自動 fallback
 - 別 cache key (`snapshot:f-{keyword}.parquet`) でフィルタ済み Parquet をキャッシュ
-- `listAvailableLabels()` — PDS `com.etzhayyim.kagami.listLabels` XRPC (14+ labels、5min cache)
+- `listAvailableLabels()` — PDS `cloud.itonami.kagami.listLabels` XRPC (14+ labels、5min cache)
 
 **Data flow**:
 ```
@@ -693,13 +693,13 @@ Read:  PDS XRPC → CF Cache API (60s) → graph SQL path → RisingWave (MV tra
 
 ### Projector PM Tools (Research + DID Expansion)
 
-**Projector (`/projects/[convoId]`, `com.etzhayyim.projector.*`) の PM agent に 5 つの built-in ツール。** LLM が text-based `[TOOL_CALL: name(args)]` で自動チェーン。設計: `60-apps/etzhayyim-project-projector/CLAUDE.md`
+**Projector (`/projects/[convoId]`, `cloud.itonami.projector.*`) の PM agent に 5 つの built-in ツール。** LLM が text-based `[TOOL_CALL: name(args)]` で自動チェーン。設計: `60-apps/itonami-project-projector/CLAUDE.md`
 
 | Tool | 説明 | 用途 |
 |---|---|---|
 | `pm.search_agents` | Platform 上の AI agent を embedding semantic search (multilingual-e5-small 384d client-side) + keyword fallback で検索 | 調査に適した agent を発見 |
 | `pm.invite_agent` | Agent をプロジェクトに招待 | 専門 agent の tools を利用可能に |
-| `pm.web_research` | site.etzhayyim.com 経由で URL 取得 → Markdown | 外部情報収集 |
+| `pm.web_research` | site.itonami.cloud 経由で URL 取得 → Markdown | 外部情報収集 |
 | `pm.create_entity_did` | 発見したエンティティに path-based DID 作成 | DID ドメイン拡張 |
 | `pm.graph_search` | ナレッジグラフ検索 | 既存エンティティ確認 (DID 重複防止) |
 
@@ -712,7 +712,7 @@ PM Agent (LLM + text-based tool calling):
   1. [TOOL_CALL: pm.graph_search({"query":"半導体"})]
      → 既存エンティティ確認 (重複防止)
   2. [TOOL_CALL: pm.web_research({"url":"https://example.com/semiconductor","topic":"半導体"})]
-     → site.etzhayyim.com 経由 fetch → Markdown 返却
+     → site.itonami.cloud 経由 fetch → Markdown 返却
   3. [TOOL_CALL: pm.create_entity_did({"path":"tsmc","displayName":"TSMC / 台湾積体電路製造","description":"世界最大の半導体ファウンドリ","category":"company","website":"https://www.tsmc.com"})]
      → did:web:{host}:tsmc 作成 + Profile 登録
   4. [TOOL_CALL: pm.create_entity_did({"path":"samsung-foundry","displayName":"Samsung Foundry","description":"Samsung の半導体製造部門","category":"company"})]
@@ -728,19 +728,19 @@ PM reply: "半導体サプライチェーンの調査完了。以下の DID を�
 | `/image {prompt}` | Murakumo WAI-REAL | 画像生成 |
 | `/think {prompt}` | qwen3-30b | Deep reasoning (`<think>` tags) |
 
-- evidence: `pds-handlers-etzhayyim.cljc` L2434-2500 — PM built-in tools (search/invite/web_research/create_entity_did/graph_search)
-- evidence: `pds-handlers-etzhayyim.cljc` L2577-2685 — Tool execution handlers (search_agents/invite_agent/web_research/create_entity_did/graph_search → cross-actor dispatch)
-- evidence: `pds-handlers-etzhayyim.cljc` L2221-2387 — Slash commands (/image, /think)
+- evidence: `pds-handlers-itonami.cljc` L2434-2500 — PM built-in tools (search/invite/web_research/create_entity_did/graph_search)
+- evidence: `pds-handlers-itonami.cljc` L2577-2685 — Tool execution handlers (search_agents/invite_agent/web_research/create_entity_did/graph_search → cross-actor dispatch)
+- evidence: `pds-handlers-itonami.cljc` L2221-2387 — Slash commands (/image, /think)
 
 ### Profile eSIM Management (Celler Integration)
 
-**自分のプロフィールに「SIM」タブを追加。** Celler (celler.etzhayyim.com) 経由で Telnyx Wireless eSIM の契約・管理が可能。
+**自分のプロフィールに「SIM」タブを追加。** Celler (celler.itonami.cloud) 経由で Telnyx Wireless eSIM の契約・管理が可能。
 
 | 機能 | XRPC NSID | 説明 |
 |---|---|---|
-| **eSIM 発行** | `com.etzhayyim.apps.celler.provisionEsim` | Telnyx API → QR code + activation code |
-| **アクティベート** | `com.etzhayyim.apps.celler.activateEsim` | ICCID → enable |
-| **一時停止** | `com.etzhayyim.apps.celler.suspendEsim` | ICCID → disable |
+| **eSIM 発行** | `cloud.itonami.apps.celler.provisionEsim` | Telnyx API → QR code + activation code |
+| **アクティベート** | `cloud.itonami.apps.celler.activateEsim` | ICCID → enable |
+| **一時停止** | `cloud.itonami.apps.celler.suspendEsim` | ICCID → disable |
 | **使用量確認** | SQL `(:ESimProfile)` query | data_used/remaining MB |
 
 **オンボーディングバナー**: 自分のプロフィール表示時に eSIM 未契約の場合、emerald グラデーションのバナーで契約を促進。Welcome フローにも「eSIM で繋がる」ステップを追加。
@@ -750,7 +750,7 @@ PM reply: "半導体サプライチェーンの調査完了。以下の DID を�
 
 ### Profile Cross-App Scores (Dojo / Joucho)
 
-**ActorHero に dojo / joucho スコアをバッジ表示。** Profile ロード時に `atproto.etzhayyim.com/xrpc/com.etzhayyim.kagami.graph.query` で並列 Graph query (2s timeout、non-blocking)。
+**ActorHero に dojo / joucho スコアをバッジ表示。** Profile ロード時に `atproto.itonami.cloud/xrpc/cloud.itonami.kagami.graph.query` で並列 Graph query (2s timeout、non-blocking)。
 
 | Score | SQL Label | 表示 | 色 |
 |---|---|---|---|
@@ -783,7 +783,7 @@ PM reply: "半導体サプライチェーンの調査完了。以下の DID を�
 
 ### XRPC Auth Bridge (Passkey → $lib/atproto-agent)
 
-**`$lib/atproto-agent` XRPC client に `setTokenProvider()` を追加。** Passkey session JWT を XRPC Bearer token として PDS に送信。authn.etzhayyim.com Passkey interface (`signIn`, `signUp`, `getSessionToken`) — `passkey.cljc` が実装。
+**`$lib/atproto-agent` XRPC client に `setTokenProvider()` を追加。** Passkey session JWT を XRPC Bearer token として PDS に送信。authn.itonami.cloud Passkey interface (`signIn`, `signUp`, `getSessionToken`) — `passkey.cljc` が実装。
 
 **設計**: `$lib/atproto-agent` の `xrpcFetch` は `_session?.accessJwt` (AT Protocol session) を優先し、fallback で `_tokenProvider()` (Passkey session JWT) を使用。
 
@@ -827,9 +827,9 @@ PM reply: "半導体サプライチェーンの調査完了。以下の DID を�
 **Agent profile の「ツール」タブに MCP tools を表示。** `AgentProfile.svelte` が 4 層 fallback で tools を取得しレンダリング (紫 wrench icon + MCP badge)。
 
 **Discovery 4 層 fallback:**
-1. canonical `mcp.etzhayyim.com/xrpc/com.etzhayyim.mcp.message` (compat: `mcp.etzhayyim.com/mcp`) に `tools/list` POST (JSON-RPC 2.0, public — 認証不要) → `:ActorCapability` / `:ActorCard` / DISPATCHER `/_app/meta` graph query
+1. canonical `mcp.itonami.cloud/xrpc/cloud.itonami.mcp.message` (compat: `mcp.itonami.cloud/mcp`) に `tools/list` POST (JSON-RPC 2.0, public — 認証不要) → `:ActorCapability` / `:ActorCard` / DISPATCHER `/_app/meta` graph query
 2. `actor.tools` prop (SSR `+page.server.cljc` が `/_app/meta` をサーバーサイドで fetch → `data.appTools` → `actorData.tools` で渡す。CORS 不要)
-3. `{nanoid}.etzhayyim.com/_app/meta` 直接 fetch (CORS header `Access-Control-Allow-Origin: *` が `kotodama-host-sdk` に追加済み。user Worker 再デプロイ後に動作)
+3. `{nanoid}.itonami.cloud/_app/meta` 直接 fetch (CORS header `Access-Control-Allow-Origin: *` が `kotodama-host-sdk` に追加済み。user Worker 再デプロイ後に動作)
 4. PDS `getProfile` response の `service.capabilities` (capabilities prop fallback)
 
 **CORS fix:** `kotoba-lang/kotodama-host/sdk/kotodama-host-sdk/src/index.cljc` の `/_app/meta` レスポンスに `Access-Control-Allow-Origin: *` を追加。全 user Worker 再デプロイで反映。再デプロイ前は Layer 2 (SSR server-side fetch) が primary fallback として機能。
@@ -837,18 +837,18 @@ PM reply: "半導体サプライチェーンの調査完了。以下の DID を�
 **MCP Auth policy:** Read-only methods (`tools/list`, `resources/list`, `initialize`, `ping`) は public (認証不要)。Mutation methods (`tools/call`) は AT Protocol session JWT or ES256 Service Auth 必須。evidence: `50-infra/cloudflare/workers/atproto/src/app.cljc` (`isMcpReadOnly`)
 
 **Capabilities pipeline:**
-- `kotodama.jsonld` `profile.capabilities` → `etzhayyim deploy` → `__APP_CAPABILITIES_JSON__` → entry.cljc `/_app/meta` に `capabilities`/`tools` 出力 (+ CORS header)
-- `etzhayyim deploy` → `registerProfileToYata` → PDS `com.atproto.admin.registerApp` → `capabilities_json` を `:App` graph node に MERGE
+- `kotodama.jsonld` `profile.capabilities` → `itonami deploy` → `__APP_CAPABILITIES_JSON__` → entry.cljc `/_app/meta` に `capabilities`/`tools` 出力 (+ CORS header)
+- `itonami deploy` → `registerProfileToYata` → PDS `com.atproto.admin.registerApp` → `capabilities_json` を `:App` graph node に MERGE
 - PDS `getProfile` SQL → `m.capabilities_json` → `service.capabilities` に parse して返却
 - SSR `+page.server.cljc` → `getAppMetaTools(appHost)` → `/_app/meta` server-side fetch (CORS 不要) → `data.appTools`
 
 ### Org Management in Profile `[DESIGN]`
 
-**組織管理 UI は profile ページ (`/profile/[handle]`) に統合。** 独立した org 管理ページは作らない。Backend は `moderator.etzhayyim.com` XRPC。
+**組織管理 UI は profile ページ (`/profile/[handle]`) に統合。** 独立した org 管理ページは作らない。Backend は `moderator.itonami.cloud` XRPC。
 
 #### Org-Account-Based Identity
 
-全アカウントはデフォルトで org DID (`performerType: organization`, `org_type: personal`)。person profile は org 内の `:person` path-based DID。設計詳細: `60-apps/etzhayyim-project-moderator/CLAUDE.md` §Org-Account-Based Identity Design。
+全アカウントはデフォルトで org DID (`performerType: organization`, `org_type: personal`)。person profile は org 内の `:person` path-based DID。設計詳細: `60-apps/itonami-project-moderator/CLAUDE.md` §Org-Account-Based Identity Design。
 
 #### Profile Org Tab (`isSelf && isOrgController`)
 
@@ -874,10 +874,10 @@ AgentProfile tabs (isSelf && org_type !== 'personal'):
 
 ```
 yoro Profile Org Tab
-  → XRPC moderator.etzhayyim.com/list_org_dids (account_did)
-  → XRPC moderator.etzhayyim.com/create_org_did (path, display_name)
-  → XRPC moderator.etzhayyim.com/invite_member (org_did, member_person_did, role)
-  → authn.etzhayyim.com/rpc/switch-active-did (new_active_did) → session 更新
+  → XRPC moderator.itonami.cloud/list_org_dids (account_did)
+  → XRPC moderator.itonami.cloud/create_org_did (path, display_name)
+  → XRPC moderator.itonami.cloud/invite_member (org_did, member_person_did, role)
+  → authn.itonami.cloud/rpc/switch-active-did (new_active_did) → session 更新
 ```
 
 ### AppShell Flex Layout Fix
@@ -899,8 +899,8 @@ yoro Profile Org Tab
 
 | 層 | 実装 |
 |---|---|
-| **Write** | `atProcedure('com.atproto.repo.createRecord', { collection: 'com.etzhayyim.yoro.browsingHistory', record })` → PDS → yata `BrowsingHistory` node |
-| **Read** | `atProcedure('com.etzhayyim.kagami.graph.query', { statement: 'MATCH (h:BrowsingHistory) WHERE h.repo = $did ... ORDER BY h.created_at DESC LIMIT 200', parameters: { did } })` |
+| **Write** | `atProcedure('com.atproto.repo.createRecord', { collection: 'cloud.itonami.yoro.browsingHistory', record })` → PDS → yata `BrowsingHistory` node |
+| **Read** | `atProcedure('cloud.itonami.kagami.graph.query', { statement: 'MATCH (h:BrowsingHistory) WHERE h.repo = $did ... ORDER BY h.created_at DESC LIMIT 200', parameters: { did } })` |
 | **Delete** | `atProcedure('com.atproto.repo.deleteRecord', { collection, rkey })` — 個別 / 全削除 |
 | **Dedup** | Client-side `_recentPaths` Map — 同一 path 1 時間以内の重複 write 抑制 |
 | **UI** | `/history` route — filter tabs (all/profile/post/search) + 個別削除 (X) + 全削除 (確認モーダル) |
@@ -960,12 +960,12 @@ WebLLM opt-in (`localStorage('yoro-local-llm-enabled')`) = DM E2E encrypt opt-in
 ## Build & Deploy
 
 ```bash
-cd 60-apps/etzhayyim-project-yoro/wasm/yoro-ui-g00h5zto
+cd 60-apps/itonami-project-yoro/wasm/yoro-ui-g00h5zto
 cd svelte && pnpm build && cd ..
 npx wrangler deploy  # infra Worker (Assets binding required)
 
 # smoke test
-curl https://yoro.etzhayyim.com/
+curl https://yoro.itonami.cloud/
 ```
 
 ## Android (Capacitor 7 + Fastlane)
@@ -981,7 +981,7 @@ export PATH="$JAVA_HOME/bin:$ANDROID_HOME/platform-tools:$ANDROID_HOME/cmdline-t
 ### Deploy to USB-connected device
 
 ```bash
-cd 60-apps/etzhayyim-project-yoro/wasm/yoro-ui-g00h5zto/svelte
+cd 60-apps/itonami-project-yoro/wasm/yoro-ui-g00h5zto/svelte
 bundle exec fastlane android device
 ```
 
@@ -1003,13 +1003,13 @@ collections = [
     "app.bsky.feed.post",
     "app.bsky.feed.like",
     "app.bsky.graph.follow",
-    "com.etzhayyim.convo.message",
-    "com.etzhayyim.convo.convo",
-    "com.etzhayyim.convo.member",
-    "com.etzhayyim.convo.reaction",
-    "com.etzhayyim.convo.readReceipt",
-    "com.etzhayyim.convo.presence",
-    "com.etzhayyim.signal.preKeyBundle",
+    "cloud.itonami.convo.message",
+    "cloud.itonami.convo.convo",
+    "cloud.itonami.convo.member",
+    "cloud.itonami.convo.reaction",
+    "cloud.itonami.convo.readReceipt",
+    "cloud.itonami.convo.presence",
+    "cloud.itonami.signal.preKeyBundle",
 ]
 
 [w_protocol]
